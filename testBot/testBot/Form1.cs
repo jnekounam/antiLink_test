@@ -44,45 +44,33 @@ namespace testBot
         private static async void botOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
             var message = messageEventArgs.Message;
-            var getAdmins = await bot.GetChatAdministratorsAsync(message.Chat.Id);
             if (message != null)
             {
-                foreach (var Admins in getAdmins)
+                var getChatMember = await bot.GetChatMemberAsync(message.Chat.Id, message.From.Id);
+                if(message.Text != null && message.Entities != null && getChatMember.Status != ChatMemberStatus.Administrator && getChatMember.Status != ChatMemberStatus.Creator)
                 {
-                    if(message.From.Id != Admins.User.Id)
+                    foreach (var entity in message.Entities)
                     {
-                        if(message.Text != null && message.Entities != null)
+                        if (entityType.Contains(entity.Type))
                         {
-                            foreach (var entity in message.Entities)
-                            {
-                                if (entityType.Contains(entity.Type))
-                                {
-                                    await DeleteMessageAsync(message.Chat.Id, message.MessageId);
-                                }
-                                else if (message.Caption != null)
-                                {
-                                    foreach (string srch in entityGuess)
-                                    {
-                                        if (message.Caption.Contains(srch) == true && message.Caption.Contains("@yahoo") == false && message.Caption.Contains("@gmail") == false)
-                                        {
-                                            await DeleteMessageAsync(message.Chat.Id, message.MessageId);
-                                        }
-                                    }
-                                }
-                                else if (message.Sticker != null)
-                                {
-                                    await DeleteMessageAsync(message.Chat.Id, message.MessageId);
-                                }
-
-                            }
+                            await DeleteMessageAsync(message.Chat.Id, message.MessageId);
                         }
                     }
-                    else
+                }
+                else if (message.Caption != null)
+                {
+                    foreach (string srch in entityGuess)
                     {
-                        return;
+                        if (message.Caption.Contains(srch) == true && message.Caption.Contains("@yahoo") == false && message.Caption.Contains("@gmail") == false)
+                        {
+                            await DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                        }
                     }
                 }
-                
+                else if (message.Sticker != null)
+                {
+                    await DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                }
             }
         }
         public static async Task DeleteMessageAsync(long chat_id, int message_id)

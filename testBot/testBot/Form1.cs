@@ -31,6 +31,7 @@ namespace testBot
             bot.OnReceiveError += botOnErrorReceived;
             bot.StartReceiving();
         }
+
         private static void botOnErrorReceived(object sender, ReceiveErrorEventArgs e)
         {
             Debugger.Break();
@@ -41,10 +42,10 @@ namespace testBot
             var message = messageEventArgs.Message;
             if(message.Text != null)
             {
-                WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
-                req.UseDefaultCredentials = true;
-                var result = await req.GetResponseAsync();
-                req.Abort();
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             }
             if (message.Text != null && message.Entities != null)
             {
@@ -52,10 +53,10 @@ namespace testBot
                 {
                     if (entityType.Contains(entity.Type))
                     {
-                        WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
-                        req.UseDefaultCredentials = true;
-                        var result = await req.GetResponseAsync();
-                        req.Abort();
+                        var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
+                        httpWebRequest.ContentType = "application/json";
+                        httpWebRequest.Method = "POST";
+                        var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                     }
                 }
             }
@@ -65,20 +66,21 @@ namespace testBot
                 {
                     if (message.Caption.Contains(srch) == true && message.Caption.Contains("@yahoo") == false && message.Caption.Contains("@gmail") == false)
                     {
-                        WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
-                        req.UseDefaultCredentials = true;
-                        var result = await req.GetResponseAsync();
-                        req.Abort();
+                        var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
+                        httpWebRequest.ContentType = "application/json";
+                        httpWebRequest.Method = "POST";
+                        var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                     }
                 }
             }
+            
 
             else if (message.Sticker != null)
             {
-                WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
-                req.UseDefaultCredentials = true;
-                var result = await req.GetResponseAsync();
-                req.Abort();
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             }
 
         }

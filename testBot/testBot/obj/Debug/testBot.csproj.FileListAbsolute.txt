@@ -1,0 +1,15 @@
+D:\emptyProject1\testBot\testBot\bin\Debug\testBot.exe.config
+D:\emptyProject1\testBot\testBot\obj\Debug\testBot.Form1.resources
+D:\emptyProject1\testBot\testBot\obj\Debug\testBot.Properties.Resources.resources
+D:\emptyProject1\testBot\testBot\obj\Debug\testBot.csproj.GenerateResource.Cache
+D:\emptyProject1\testBot\testBot\bin\Debug\testBot.exe
+D:\emptyProject1\testBot\testBot\bin\Debug\testBot.pdb
+D:\emptyProject1\testBot\testBot\bin\Debug\Newtonsoft.Json.dll
+D:\emptyProject1\testBot\testBot\bin\Debug\System.Net.Http.Formatting.dll
+D:\emptyProject1\testBot\testBot\bin\Debug\Telegram.Bot.dll
+D:\emptyProject1\testBot\testBot\bin\Debug\Newtonsoft.Json.xml
+D:\emptyProject1\testBot\testBot\bin\Debug\System.Net.Http.Formatting.xml
+D:\emptyProject1\testBot\testBot\bin\Debug\Telegram.Bot.xml
+D:\emptyProject1\testBot\testBot\obj\Debug\testBot.exe
+D:\emptyProject1\testBot\testBot\obj\Debug\testBot.pdb
+D:\emptyProject1\testBot\testBot\obj\Debug\testBot.csprojResolveAssemblyReference.cache

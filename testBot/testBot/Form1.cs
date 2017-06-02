@@ -39,10 +39,9 @@ namespace testBot
         private static async void botOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
             var message = messageEventArgs.Message;
-            var gChat = await bot.GetChatAsync(message.Chat.Id);
             if(message.Text != null)
             {
-                WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + gChat.Id + "&message_id=" + message.MessageId);
+                WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
                 req.UseDefaultCredentials = true;
                 var result = await req.GetResponseAsync();
                 req.Abort();
@@ -53,7 +52,7 @@ namespace testBot
                 {
                     if (entityType.Contains(entity.Type))
                     {
-                        WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + gChat.Id + "&message_id=" + message.MessageId);
+                        WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
                         req.UseDefaultCredentials = true;
                         var result = await req.GetResponseAsync();
                         req.Abort();
@@ -66,7 +65,7 @@ namespace testBot
                 {
                     if (message.Caption.Contains(srch) == true && message.Caption.Contains("@yahoo") == false && message.Caption.Contains("@gmail") == false)
                     {
-                        WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + gChat.Id + "&message_id=" + message.MessageId);
+                        WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
                         req.UseDefaultCredentials = true;
                         var result = await req.GetResponseAsync();
                         req.Abort();
@@ -76,7 +75,7 @@ namespace testBot
 
             else if (message.Sticker != null)
             {
-                WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + gChat.Id + "&message_id=" + message.MessageId);
+                WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
                 req.UseDefaultCredentials = true;
                 var result = await req.GetResponseAsync();
                 req.Abort();

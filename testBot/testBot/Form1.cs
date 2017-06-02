@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Telegram;
@@ -23,6 +26,7 @@ namespace testBot
         private static List<MessageEntityType> entityType = new List<MessageEntityType>(new MessageEntityType[] { MessageEntityType.Url, MessageEntityType.Mention, MessageEntityType.TextLink, MessageEntityType.TextMention });
         private static List<string> entityGuess = new List<string>(new string[] { "@", "www", "http", ".com", ".me", ".net", ".co", ".uk", ".org" });
         private static readonly TelegramBotClient bot = new TelegramBotClient(botToken);
+        private static string rcvd_data;
         public Form1()
         {
             InitializeComponent();
@@ -40,23 +44,13 @@ namespace testBot
         private static async void botOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
             var message = messageEventArgs.Message;
-            if(message.Text != null)
-            {
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "POST";
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            }
             if (message.Text != null && message.Entities != null)
             {
                 foreach (var entity in message.Entities)
                 {
                     if (entityType.Contains(entity.Type))
                     {
-                        var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
-                        httpWebRequest.ContentType = "application/json";
-                        httpWebRequest.Method = "POST";
-                        var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                        await DeleteMessageAsync(message.Chat.Id, message.MessageId);
                     }
                 }
             }
@@ -66,23 +60,23 @@ namespace testBot
                 {
                     if (message.Caption.Contains(srch) == true && message.Caption.Contains("@yahoo") == false && message.Caption.Contains("@gmail") == false)
                     {
-                        var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
-                        httpWebRequest.ContentType = "application/json";
-                        httpWebRequest.Method = "POST";
-                        var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                        await DeleteMessageAsync(message.Chat.Id, message.MessageId);
                     }
                 }
             }
-            
+
 
             else if (message.Sticker != null)
             {
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + message.Chat.Id + "&message_id=" + message.MessageId);
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "POST";
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                await DeleteMessageAsync(message.Chat.Id,message.MessageId);
             }
 
+        }
+        public static async Task DeleteMessageAsync(long chat_id,int message_id)
+        {
+            WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + chat_id + "&message_id=" + message_id);
+            await req.GetResponseAsync();
+            req.Abort();
         }
     }
 

@@ -45,40 +45,45 @@ namespace testBot
         {
             var message = messageEventArgs.Message;
             var getAdmins = await bot.GetChatAdministratorsAsync(message.Chat.Id);
-            if (message.Text != null)
+            if (message != null)
             {
                 foreach (var Admins in getAdmins)
                 {
-                    if(message.From.Id == Admins.User.Id)
+                    if(message.From.Id != Admins.User.Id)
                     {
-                        break;
+                        if(message.Text != null && message.Entities != null)
+                        {
+                            foreach (var entity in message.Entities)
+                            {
+                                if (entityType.Contains(entity.Type))
+                                {
+                                    await DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                                }
+                                else if (message.Caption != null)
+                                {
+                                    foreach (string srch in entityGuess)
+                                    {
+                                        if (message.Caption.Contains(srch) == true && message.Caption.Contains("@yahoo") == false && message.Caption.Contains("@gmail") == false)
+                                        {
+                                            await DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                                        }
+                                    }
+                                }
+                                else if (message.Sticker != null)
+                                {
+                                    await DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                                }
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return;
                     }
                 }
-                foreach (var entity in message.Entities)
-                {
-                    if (entityType.Contains(entity.Type))
-                    {
-                        await DeleteMessageAsync(message.Chat.Id, message.MessageId);
-                    }
-                }
+                
             }
-            else if (message.Caption != null)
-            {
-                foreach (string srch in entityGuess)
-                {
-                    if (message.Caption.Contains(srch) == true && message.Caption.Contains("@yahoo") == false && message.Caption.Contains("@gmail") == false)
-                    {
-                        await DeleteMessageAsync(message.Chat.Id, message.MessageId);
-                    }
-                }
-            }
-
-
-            else if (message.Sticker != null)
-            {
-                await DeleteMessageAsync(message.Chat.Id, message.MessageId);
-            }
-
         }
         public static async Task DeleteMessageAsync(long chat_id, int message_id)
         {

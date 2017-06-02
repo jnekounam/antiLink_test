@@ -44,8 +44,16 @@ namespace testBot
         private static async void botOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
             var message = messageEventArgs.Message;
-            if (message.Text != null && message.Entities != null)
+            var getAdmins = await bot.GetChatAdministratorsAsync(message.Chat.Id);
+            if (message.Text != null)
             {
+                foreach (var Admins in getAdmins)
+                {
+                    if(message.From.Id == Admins.User.Id)
+                    {
+                        break;
+                    }
+                }
                 foreach (var entity in message.Entities)
                 {
                     if (entityType.Contains(entity.Type))
@@ -68,11 +76,11 @@ namespace testBot
 
             else if (message.Sticker != null)
             {
-                await DeleteMessageAsync(message.Chat.Id,message.MessageId);
+                await DeleteMessageAsync(message.Chat.Id, message.MessageId);
             }
 
         }
-        public static async Task DeleteMessageAsync(long chat_id,int message_id)
+        public static async Task DeleteMessageAsync(long chat_id, int message_id)
         {
             WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + chat_id + "&message_id=" + message_id);
             await req.GetResponseAsync();

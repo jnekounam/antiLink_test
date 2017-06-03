@@ -57,7 +57,7 @@ namespace testBot
                         }
                     }
                 }
-                else if (message.Caption != null)
+                else if (message.Caption != null && getChatMember.Status != ChatMemberStatus.Administrator && getChatMember.Status != ChatMemberStatus.Creator)
                 {
                     foreach (string srch in entityGuess)
                     {
@@ -67,7 +67,7 @@ namespace testBot
                         }
                     }
                 }
-                else if (message.Sticker != null)
+                else if (message.Sticker != null && getChatMember.Status != ChatMemberStatus.Administrator && getChatMember.Status != ChatMemberStatus.Creator)
                 {
                     await DeleteMessageAsync(message.Chat.Id, message.MessageId);
                 }

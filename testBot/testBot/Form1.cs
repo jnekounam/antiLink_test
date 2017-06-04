@@ -22,11 +22,10 @@ namespace testBot
 {
     public partial class Form1 : Form
     {
-        private static readonly string botToken = "343393266:AAG1SltZt3VaZNydfqNw4-i0p8w0DcXKlBo";
+        private static readonly string botToken = "343393266:AAHk3DuURKHmI1xrmXLJHVu2Z5FaZoDeGNU";
         private static List<MessageEntityType> entityType = new List<MessageEntityType>(new MessageEntityType[] { MessageEntityType.Url, MessageEntityType.Mention, MessageEntityType.TextLink, MessageEntityType.TextMention });
         private static List<string> entityGuess = new List<string>(new string[] { "@", "www", "http", ".com", ".me", ".net", ".co", ".uk", ".org" });
         private static readonly TelegramBotClient bot = new TelegramBotClient(botToken);
-        private static string rcvd_data;
         public Form1()
         {
             InitializeComponent();
@@ -44,40 +43,69 @@ namespace testBot
         private static async void botOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
             var message = messageEventArgs.Message;
-            if (message != null)
+            #region Group Management
+            try
             {
-                var getChatMember = await bot.GetChatMemberAsync(message.Chat.Id, message.From.Id);
-                if(message.Text != null && message.Entities != null && getChatMember.Status != ChatMemberStatus.Administrator && getChatMember.Status != ChatMemberStatus.Creator)
+                if (message.Chat.Type == ChatType.Group || message.Chat.Type == ChatType.Supergroup)
                 {
-                    foreach (var entity in message.Entities)
+                    var getChatMember = await bot.GetChatMemberAsync(message.Chat.Id, message.From.Id);
+                    if (getChatMember.Status == ChatMemberStatus.Member)
                     {
-                        if (entityType.Contains(entity.Type))
+                        if (message.ForwardFrom != null || message.ForwardFromChat != null)
                         {
                             await DeleteMessageAsync(message.Chat.Id, message.MessageId);
                         }
-                    }
-                }
-                else if (message.Caption != null && getChatMember.Status != ChatMemberStatus.Administrator && getChatMember.Status != ChatMemberStatus.Creator)
-                {
-                    foreach (string srch in entityGuess)
-                    {
-                        if (message.Caption.Contains(srch) == true && message.Caption.Contains("@yahoo") == false && message.Caption.Contains("@gmail") == false)
+                        switch (message.Type)
                         {
-                            await DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                            case MessageType.TextMessage:
+                                if (message.Entities != null)
+                                {
+                                    foreach (var entity in message.Entities)
+                                    {
+                                        if (entityType.Contains(entity.Type))
+                                        {
+                                            await DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                                        }
+                                    }
+                                }
+                                else if (message.Caption != null)
+                                {
+                                    foreach (string srch in entityGuess)
+                                    {
+                                        if (message.Caption.Contains(srch) == true && message.Caption.Contains("@yahoo") == false && message.Caption.Contains("@gmail") == false)
+                                        {
+                                            await DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                                        }
+                                    }
+                                }
+                                break;
+                            case MessageType.StickerMessage:
+                                await DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                                break;
+
                         }
                     }
-                }
-                else if (message.Sticker != null && getChatMember.Status != ChatMemberStatus.Administrator && getChatMember.Status != ChatMemberStatus.Creator)
-                {
-                    await DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                    #endregion Group Management
                 }
             }
+            catch
+            {
+
+            }
+
         }
-        public static async Task DeleteMessageAsync(long chat_id, int message_id)
+        private static async Task DeleteMessageAsync(long chat_id, int message_id)
         {
-            WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + chat_id + "&message_id=" + message_id);
-            await req.GetResponseAsync();
-            req.Abort();
+            try
+            {
+                WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + chat_id + "&message_id=" + message_id);
+                WebResponse resp = await req.GetResponseAsync();
+                req.Abort();
+            }
+            catch
+            {
+
+            }
         }
     }
 

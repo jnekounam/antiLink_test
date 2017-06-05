@@ -98,9 +98,10 @@ namespace testBot
         {
             try
             {
-                WebRequest req = WebRequest.Create("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + chat_id + "&message_id=" + message_id);
-                WebResponse resp = await req.GetResponseAsync();
-                req.Abort();
+                using (var client = new WebClient())
+                {
+                    var content = await client.DownloadStringTaskAsync("https://api.telegram.org/bot" + botToken + "/deleteMessage?chat_id=" + chat_id + "&message_id=" + message_id);
+                }
             }
             catch
             {

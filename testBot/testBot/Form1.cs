@@ -55,6 +55,16 @@ namespace testBot
                         {
                             await DeleteMessageAsync(message.Chat.Id, message.MessageId);
                         }
+                        else if (message.Caption != null)
+                        {
+                            foreach (string srch in entityGuess)
+                            {
+                                if (message.Caption.Contains(srch) == true && message.Caption.Contains("@yahoo") == false && message.Caption.Contains("@gmail") == false)
+                                {
+                                    await DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                                }
+                            }
+                        }
                         switch (message.Type)
                         {
                             case MessageType.TextMessage:
@@ -63,16 +73,6 @@ namespace testBot
                                     foreach (var entity in message.Entities)
                                     {
                                         if (entityType.Contains(entity.Type))
-                                        {
-                                            await DeleteMessageAsync(message.Chat.Id, message.MessageId);
-                                        }
-                                    }
-                                }
-                                else if (message.Caption != null)
-                                {
-                                    foreach (string srch in entityGuess)
-                                    {
-                                        if (message.Caption.Contains(srch) == true && message.Caption.Contains("@yahoo") == false && message.Caption.Contains("@gmail") == false)
                                         {
                                             await DeleteMessageAsync(message.Chat.Id, message.MessageId);
                                         }

@@ -22,10 +22,12 @@ namespace testBot
 {
     public partial class Form1 : Form
     {
-        private static readonly string botToken = "343393266:AAHk3DuURKHmI1xrmXLJHVu2Z5FaZoDeGNU";
+        private static readonly string botToken = "343393266:AAH8BBukaPDTYjou5IOgrthO706oQkzlxI8";
         private static List<MessageEntityType> entityType = new List<MessageEntityType>(new MessageEntityType[] { MessageEntityType.Url, MessageEntityType.Mention, MessageEntityType.TextLink, MessageEntityType.TextMention });
         private static List<string> entityGuess = new List<string>(new string[] { "@", "www", "http", ".com", ".me", ".net", ".co", ".uk", ".org" });
         private static readonly TelegramBotClient bot = new TelegramBotClient(botToken);
+
+        //kgk: -1001088853897
         public Form1()
         {
             InitializeComponent();
